@@ -4,6 +4,7 @@
 
 #include <msp430.h>
 #include "adc.h"
+#include "uart.h"
 
 
 #define PIN_DEBUG BIT3
@@ -25,10 +26,14 @@ void main(void)
     __enable_interrupt();
     init_system_clock();
     adc_init();
+    uart_init();
+
     while(1) {
         while (!adcNewDataFlag);
         adcNewDataFlag = 0;
         P4OUT ^= PIN_DEBUG;
+        unsigned char data[4] = {42, 1, 2, 3};
+        uart_write(data, 4);
     }
 }
 
