@@ -5,6 +5,7 @@
 #include <msp430.h>
 #include "adc.h"
 #include "uart.h"
+#include "pcComInterface.h"
 
 
 #define PIN_DEBUG BIT3
@@ -14,7 +15,7 @@ void init_system_clock(void);
 void init_adc_sampling(void);
 
 
-
+PCDataFrame dataFrame = {.frameID = PC_DATA_FRAME_ID};
 
 void main(void)
 {
@@ -32,8 +33,20 @@ void main(void)
         while (!adcNewDataFlag);
         adcNewDataFlag = 0;
         P4OUT ^= PIN_DEBUG;
-        unsigned char data[4] = {42, 1, 2, 3};
-        uart_write(data, 4);
+
+        dataFrame.buckPWM = 0;
+        dataFrame.cellVoltage1 = cellVoltage1;
+        dataFrame.cellVoltage2 = cellVoltage2;
+        dataFrame.cellVoltage3 = cellVoltage3;
+        dataFrame.cellVoltage4 = cellVoltage4;
+        dataFrame.solarVoltageN = solarVoltageN;
+        dataFrame.solarVoltageP = solarVoltageP;
+        dataFrame.buckCurrent = buckCurrent;
+        dataFrame.systemCurrent = systemCurrent;
+        dataFrame.motorCurrent1 = motorCurrent1;
+        dataFrame.motorCurrent2 = motorCurrent1;
+
+        uart_write(dataFrame.data, PC_DATA_FRAME_LENGTH);
     }
 }
 
