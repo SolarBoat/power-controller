@@ -1,8 +1,5 @@
 /*
  * pcComInterface.h
- *
- *  Created on: Aug 22, 2021
- *      Author: Tobias
  */
 
 #ifndef PCCOMINTERFACE_H_
@@ -11,6 +8,7 @@
 #define PC_DATA_FRAME_ID 0x01
 #define PC_DATA_FRAME_LENGTH 2*11+1
 
+#pragma pack(push,1)
 typedef union PCDataFrame {
     struct {
         unsigned char frameID;
@@ -23,5 +21,6 @@ typedef union PCDataFrame {
     };
     unsigned char data[PC_DATA_FRAME_LENGTH];
 } PCDataFrame;
+#pragma pack(pop)
 
 #endif /* PCCOMINTERFACE_H_ */
